@@ -25,8 +25,6 @@ namespace Geometer.Lib
       Model = new GeoModel();
     }
 
-    //TODO  - Think of a better name for this function
-    //TODO2 - Think of what would be good to return here (string should be fine for now but maybe I want some kind of response model)
     public static ExecResult Execute(string code, bool replMode)
     {
       try

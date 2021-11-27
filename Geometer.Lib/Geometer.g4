@@ -2,9 +2,9 @@ grammar Geometer;
 
 /** Parser **/
 
-start : line* EOF ;
-line : objref constraint? NEWLINE? 
-     | QUERY queryline NEWLINE?
+start : (line? NEWLINE)* line? NEWLINE? EOF ;
+line : objref constraint? 
+     | QUERY queryline
      | IMPORT FILE
      | CLEAR
      | RESET
@@ -17,7 +17,7 @@ queryline : objref constraint?
           | expression (EQUAL | LESS | GREATER | NOT EQUAL | LESS EQUAL | GREATER EQUAL) expression
           ;
 
-onshape : ON (lineref | circref | polyref);
+onshape : ON (pointref | lineref | circref | polyref);
 perpbis : PERPENDICULAR BISECTOR OF lineref;
 bisect  : BISECTOR OF (lineref | angleref);
 tangent : TANGENT OF circref;
@@ -27,7 +27,7 @@ constraint : IS (onshape | perpbis | bisect | tangent)
            | (SQUIGGLE | SQUIGGLE EQUAL) objref
            ;
 
-idchain : IDENTIFIER (COMBINE IDENTIFIER)* ;
+idchain : IDENTIFIER (IDENTIFIER)* ;
 
 pointref : POINT idchain secname? ;
 lineref : LINE idchain idchain? secname? ;
@@ -82,6 +82,10 @@ CIRCUMFERENCE : 'circumference' ;
 
 QUERY         : '?' ;
 
+NEWLINE       : ('\r'? '\n' | '\r')+ ;
+WHITESPACE    : (' '|'\t') -> skip ;
+COMMENT       : '--' ~[\n]* -> skip ;
+
 LESS          : '<' ;
 GREATER       : '>' ;
 EQUAL         : '=' ;
@@ -117,10 +121,8 @@ SAVE          : 'save' ;
 
 NUMTYPE       : 'number';
 NUMBER        : '-'?('0'|[1-9][0-9]*) ;
-IDENTIFIER    : [A-Z]([a-zA-Z0-9])* ;
+IDENTIFIER    : [A-Z]([0-9])*('_'([0-9])*)* ;
 CUSTOM_ID     : [a-z]([a-zA-Z0-9])* ;
 FILE          : '\'' ('/'|'~/'|'./')? (~[/\n]+ '/')* ~[\n]* '\'' ;
 COMBINE       : '_' ;
-NEWLINE       : ('\r'? '\n' | '\r')+ ;
 
-WHITESPACE    : (' '|'\t') -> skip ;

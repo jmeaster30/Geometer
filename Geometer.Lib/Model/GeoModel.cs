@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Antlr4.Runtime;
-using Geometer.Lib.Translator;
+using System.Linq;
+using Geometer.Lib.Translator.AST;
 
 namespace Geometer.Lib.Model
 {
@@ -35,7 +35,19 @@ namespace Geometer.Lib.Model
       {
         //loop through AST models
         //try to update the existing model
+        Root root = (Root)result.Ast;
+        root.Print();
+        Console.WriteLine("");
+
+        List<ModelDef> model_defs = root.Lines.Where(x => x.Type == GeometerASTType.Model).Select(x => (ModelDef)x).ToList();
+
+        foreach (ModelDef model_def in model_defs)
+        {
+
+        }
       }
+
+      Console.WriteLine(result.Message);
 
       return new GeoUpdateResult()
       {
@@ -56,7 +68,7 @@ namespace Geometer.Lib.Model
     {
       foreach (Model model in Models)
       {
-        model.Draw();
+        //model.Draw();
       }
     }
 
