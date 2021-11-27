@@ -9,6 +9,7 @@
     <ProjectReference Include="..\Geometer.Lib\Geometer.Lib.csproj" />
     <PackageReference Include="GtkSharp" Version="3.24.24.34" />
     <PackageReference Include="CairoSharp" Version="3.24.24.34" />
+    <EmbeddedResource Include="Samples\*.geo" />
   </ItemGroup>
 
 </Project>

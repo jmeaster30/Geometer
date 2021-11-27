@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 using Geometer.Lib;
 using Geometer.Lib.Model;
 using Geometer.Utilities;
@@ -11,6 +10,10 @@ namespace Geometer
   {
     // execution stuff
     public Geo Geo { get; set; }
+
+    //file stuff
+    public string FilePath { get; }
+    public bool Saved { get; set; }
 
     // main page stuff
     public Label Label { get; set; }
@@ -25,13 +28,17 @@ namespace Geometer
     //private junk
     private Action<string> DebouncedUpdate { get; set; }
 
-    public GeometerEditorPage(string path)
+    public GeometerEditorPage(string path) : this(path, string.IsNullOrEmpty(path) ? "New" : System.IO.Path.GetFileName(path)) { }
+
+    public GeometerEditorPage(string path, string name)
     {
       Homogeneous = false;
       Spacing = 0;
 
+      FilePath = string.IsNullOrEmpty(path) ? null : path;
+
       Label = new();
-      Label.Text = string.IsNullOrEmpty(path) ? "New" : System.IO.Path.GetFileName(path);
+      Label.Text = name;
 
       TextView = new();
       TextView.Buffer.Changed += OnChanged;
@@ -110,11 +117,21 @@ namespace Geometer
       clearQueries.Clicked += ClearQueryClicked;
       tb.Add(clearQueries);
 
+      ToolButton closeTab = new(null, "Close Tab");
+      closeTab.Clicked += CloseTab;
+      tb.Add(closeTab);
+
       PackStart(swin, true, true, 0);
       PackEnd(tb, false, false, 0);
 
       Action<string> updateModel = (source) => { DoUpdateStuff(source); };
       DebouncedUpdate = updateModel.Debounce(200);
+    }
+
+    public void CloseTab(object sender, EventArgs eventArgs)
+    {
+      GeometerEditor editor = (GeometerEditor)Parent;
+      editor.RemovePage(editor.PageNum(this));
     }
 
     public void OnChanged(object sender, EventArgs eventArgs)

@@ -32,5 +32,10 @@ namespace Geometer.Utilities
     {
       return str.Length > limit ? $"{str.Substring(0 , limit - 3)}..." : str;
     }
+
+    public static string ToUpperCase(this string str)
+    {
+      return $"{str[0..1].ToUpperInvariant()}{str[1..].ToLowerInvariant()}";
+    }
   }
 }
