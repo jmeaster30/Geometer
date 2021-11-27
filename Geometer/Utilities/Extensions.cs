@@ -1,7 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Gtk;
 
 namespace Geometer.Utilities
 {
@@ -26,6 +26,14 @@ namespace Geometer.Utilities
             }
           }, TaskScheduler.Default);
       };
+    }
+
+    public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
+    {
+      foreach (T element in source)
+      {
+        action(element);
+      }
     }
 
     public static string Limit(this string str, int limit)

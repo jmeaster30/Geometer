@@ -154,15 +154,17 @@ namespace Geometer
           //for ranged errors
           buffer.ApplyTag("ErrorTag", buffer.GetIterAtOffset(result.ErrorStart), buffer.GetIterAtOffset(result.ErrorStop + 1));
         }
+        else if (result.ErrorStart == result.ErrorStop)
+        {
+          buffer.ApplyTag("ErrorTag", buffer.GetIterAtOffset(result.ErrorStart), buffer.GetIterAtOffset(result.ErrorStop + 1));
+        }
         else
         {
-          //for end of line errors
           buffer.ApplyTag("ErrorTag", buffer.GetIterAtLineIndex(result.ErrorLine - 1, 0), buffer.GetIterAtOffset(result.ErrorStop));
         }
       }
       else if (result.ErrorLine > -1 && result.ErrorPos > -1)
       {
-        //single character errors
         buffer.ApplyTag("ErrorTag", buffer.GetIterAtLineIndex(result.ErrorLine - 1, result.ErrorPos), buffer.GetIterAtLineIndex(result.ErrorLine - 1, result.ErrorPos + 1));
       }
       //else there was no error

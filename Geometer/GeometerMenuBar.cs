@@ -64,9 +64,8 @@ namespace Geometer
     public MenuItem CreateSampleMenu()
     {
       Menu sample_menu = new();
-
-      Assembly asm = Assembly.GetExecutingAssembly();
-      List<string> samples = asm.GetManifestResourceNames().Where(x => x.StartsWith("Geometer.Samples")).ToList();
+      List<string> samples = Assembly.GetExecutingAssembly().GetManifestResourceNames()
+                                .Where(x => x.StartsWith("Geometer.Samples")).ToList();
 
       foreach (string sample in samples)
       {
