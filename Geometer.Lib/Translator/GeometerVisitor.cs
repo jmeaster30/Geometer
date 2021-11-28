@@ -4,7 +4,6 @@ using System.Numerics;
 using System.Globalization;
 using Geometer.Lib.Translator.AST;
 using System;
-using System.ComponentModel.Design.Serialization;
 
 namespace Geometer.Lib.Translator
 {
@@ -156,34 +155,63 @@ namespace Geometer.Lib.Translator
       return id;
     }
 
+    public override GeometerAST VisitOnechain(GeometerParser.OnechainContext context)
+    {
+      Id id = new();
+      id.Chain.Add(context.IDENTIFIER().GetText());
+      return id;
+    }
+
+    public override GeometerAST VisitTwochain(GeometerParser.TwochainContext context)
+    {
+      Id id = new();
+      id.Chain.AddRange(context.IDENTIFIER().Select(x => x.GetText()));
+      return id;
+    }
+
+    public override GeometerAST VisitThreechain(GeometerParser.ThreechainContext context)
+    {
+      Id id = new();
+      id.Chain.AddRange(context.IDENTIFIER().Select(x => x.GetText()));
+      return id;
+    }
+
+    public override GeometerAST VisitPolychain(GeometerParser.PolychainContext context)
+    {
+      Id id = new();
+      id.Chain.AddRange(context.IDENTIFIER().Select(x => x.GetText()));
+      return id;
+    }
+
     public override GeometerAST VisitPointref(GeometerParser.PointrefContext context)
     {
       return new Point()
       {
-        Id = (Id)Visit(context.idchain()),
+        Id = (Id)Visit(context.onechain()),
         Alias = (context.secname() == null ? null : (Alias)Visit(context.secname()))?.Name
       };
     }
 
     public override GeometerAST VisitLineref(GeometerParser.LinerefContext context)
     {
-      var line = new Line() { Alias = (context.secname() == null ? null : (Alias)Visit(context.secname()))?.Name };
-
-      foreach (var id in context.idchain())
+      return new Line()
       {
-        line.Ids.Add((Id)Visit(id));
-      }
-
-      return line;
+        Id = (Id)Visit(context.twochain()),
+        Alias = (context.secname() == null ? null : (Alias)Visit(context.secname()))?.Name
+      };
     }
 
     public override GeometerAST VisitCircref(GeometerParser.CircrefContext context)
     {
       var circle = new Circle() { Alias = (context.secname() == null ? null : (Alias)Visit(context.secname()))?.Name };
 
-      foreach (var id in context.idchain())
+      if (context.onechain() != null)
       {
-        circle.Ids.Add((Id)Visit(id));
+        circle.Id = (Id)Visit(context.onechain());
+      }
+      else if (context.twochain != null)
+      {
+        circle.Id = (Id)Visit(context.twochain());
       }
 
       return circle;
@@ -191,26 +219,20 @@ namespace Geometer.Lib.Translator
 
     public override GeometerAST VisitAngleref(GeometerParser.AnglerefContext context)
     {
-      var angle = new Angle() { Alias = (context.secname() == null ? null : (Alias)Visit(context.secname()))?.Name };
-
-      foreach (var id in context.idchain())
+      return new Angle()
       {
-        angle.Ids.Add((Id)Visit(id));
-      }
-
-      return angle;
+        Id = (Id)Visit(context.threechain()),
+        Alias = (context.secname() == null ? null : (Alias)Visit(context.secname()))?.Name
+      };
     }
 
     public override GeometerAST VisitPolyref(GeometerParser.PolyrefContext context)
     {
-      var polygon = new Polygon() { Alias = (context.secname() == null ? null : (Alias)Visit(context.secname()))?.Name };
-
-      foreach (var id in context.idchain())
+      return new Polygon()
       {
-        polygon.Ids.Add((Id)Visit(id));
-      }
-
-      return polygon;
+        Id = (Id)Visit(context.polychain()),
+        Alias = (context.secname() == null ? null : (Alias)Visit(context.secname()))?.Name
+      };
     }
 
     public override GeometerAST VisitLengthref(GeometerParser.LengthrefContext context)
@@ -345,11 +367,7 @@ namespace Geometer.Lib.Translator
 
     public override GeometerAST VisitObjref(GeometerParser.ObjrefContext context)
     {
-      if (context.idchain() != null)
-      {
-        return Visit(context.idchain());
-      }
-      else if (context.pointref() != null)
+      if (context.pointref() != null)
       {
         return Visit(context.pointref());
       }

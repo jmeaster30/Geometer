@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Linq;
 
 namespace Geometer.Lib.Translator.AST
 {
@@ -40,7 +39,11 @@ namespace Geometer.Lib.Translator.AST
   public abstract class SrcLine : GeometerAST { }
   public abstract class Constraint : GeometerAST { }
   public abstract class Expression : GeometerAST { }
-  public abstract class ObjectRef : Expression { }
+  public abstract class ObjectRef : Expression
+  {
+    public Id Id { get; set; }
+    public string Alias { get; set; }
+  }
   public abstract class NumRef : ObjectRef { }
 
   public class Root : GeometerAST
@@ -213,8 +216,6 @@ namespace Geometer.Lib.Translator.AST
   public class Point : ObjectRef
   {
     public override GeometerASTType Type { get; } = GeometerASTType.Point;
-    public Id Id { get; set; }
-    public string Alias { get; set; }
     public override void Print()
     {
       Console.Write("{Point}");
@@ -224,8 +225,6 @@ namespace Geometer.Lib.Translator.AST
   public class Line : ObjectRef
   {
     public override GeometerASTType Type { get; } = GeometerASTType.Line;
-    public List<Id> Ids { get; set; } = new List<Id>();
-    public string Alias { get; set; }
     public override void Print()
     {
       Console.Write("{Line}");
@@ -235,8 +234,6 @@ namespace Geometer.Lib.Translator.AST
   public class Circle : ObjectRef
   {
     public override GeometerASTType Type { get; } = GeometerASTType.Circle;
-    public List<Id> Ids { get; set; } = new List<Id>();
-    public string Alias { get; set; }
     public override void Print()
     {
       Console.Write("{Circle}");
@@ -246,8 +243,6 @@ namespace Geometer.Lib.Translator.AST
   public class Angle : ObjectRef
   {
     public override GeometerASTType Type { get; } = GeometerASTType.Angle;
-    public List<Id> Ids { get; set; } = new List<Id>();
-    public string Alias { get; set; }
     public override void Print()
     {
       Console.Write("{Angle}");
@@ -257,8 +252,6 @@ namespace Geometer.Lib.Translator.AST
   public class Polygon : ObjectRef
   {
     public override GeometerASTType Type { get; } = GeometerASTType.Polygon;
-    public List<Id> Ids { get; set; } = new List<Id>();
-    public string Alias { get; set; }
     public override void Print()
     {
       Console.Write("{Poly}");

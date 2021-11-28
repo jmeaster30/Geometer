@@ -10,6 +10,7 @@ namespace Geometer
   {
     // execution stuff
     public Geo Geo { get; set; }
+    public GeometerDisplay GeometerDisplay { get; set; }
 
     //file stuff
     public string FilePath { get; }
@@ -61,13 +62,22 @@ namespace Geometer
       ScrolledWindow swin = new();
       swin.Add(TextView);
 
+      GeometerDisplay = new();
+
+      HPaned pane = new();
+      pane.Pack1(GeometerDisplay, false, false);
+      pane.Pack2(swin, false, false);
+      pane.Position = 500; // TODO Get rid of this constant
+
+      PackStart(pane, true, true, 0);
+
       Toolbar tb = new();
       ToolItem ti = new();
       ErrorLabel = new()
       {
         Text = "no errors :)",
         LineWrap = false,
-        MaxWidthChars = 120,
+        MaxWidthChars = 120, // TODO Get rid of this constant
       };
 
       ti.Add(ErrorLabel);
@@ -121,7 +131,6 @@ namespace Geometer
       closeTab.Clicked += CloseTab;
       tb.Add(closeTab);
 
-      PackStart(swin, true, true, 0);
       PackEnd(tb, false, false, 0);
 
       Action<string> updateModel = (source) => { DoUpdateStuff(source); };
@@ -167,7 +176,11 @@ namespace Geometer
       {
         buffer.ApplyTag("ErrorTag", buffer.GetIterAtLineIndex(result.ErrorLine - 1, result.ErrorPos), buffer.GetIterAtLineIndex(result.ErrorLine - 1, result.ErrorPos + 1));
       }
-      //else there was no error
+
+      if (result.Successful && result.Updated)
+      {
+        Console.WriteLine("Model Updated!!!!");
+      }
     }
 
     public void RefreshClicked(object sender, EventArgs eventArgs)

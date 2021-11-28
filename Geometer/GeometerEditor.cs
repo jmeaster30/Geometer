@@ -1,10 +1,11 @@
-using System;
 using Gtk;
 
 namespace Geometer
 {
   public class GeometerEditor : Notebook
   {
+    public GeometerDisplay GeometerDisplay { get; set; }
+
     public GeometerEditor()
     {
       CreateNewPage();
@@ -12,7 +13,7 @@ namespace Geometer
 
     public void CreateNewPage()
     {
-      GeometerEditorPage page = new(null, $"New {NPages}");
+      GeometerEditorPage page = new(null, $"New {NPages + 1}");
       int new_page = AppendPage(page, page.Label);
       ShowAll();
       CurrentPage = new_page;

@@ -28,12 +28,16 @@ constraint : IS (onshape | perpbis | bisect | tangent)
            ;
 
 idchain : IDENTIFIER (IDENTIFIER)* ;
+onechain : IDENTIFIER ;
+twochain : IDENTIFIER IDENTIFIER ;
+threechain : IDENTIFIER IDENTIFIER IDENTIFIER ;
+polychain : IDENTIFIER IDENTIFIER IDENTIFIER+ ;
 
-pointref : POINT idchain secname? ;
-lineref : LINE idchain idchain? secname? ;
-circref : CIRCLE idchain idchain? secname? ;
-angleref : ANGLE idchain idchain? idchain? secname? ;
-polyref : POLYGON idchain idchain idchain+ secname? ;
+pointref : POINT onechain secname? ;
+lineref : LINE twochain secname? ;
+circref : CIRCLE (onechain | twochain) secname? ;
+angleref : ANGLE threechain secname? ;
+polyref : POLYGON polychain secname? ;
 
 lengthref : LENGTH OF lineref ;
 sizeref : SIZE OF angleref ;
@@ -49,7 +53,7 @@ expexpression : term EXP expexpression | term ;
 term : NUMBER | numref | PI | TAU | '(' expression ')' ;
 
 numref : lengthref | sizeref | arearef | periref | circumref ;
-objref : idchain | pointref | lineref | circref | angleref | polyref | numref ;
+objref : pointref | lineref | circref | angleref | polyref | numref ; /* got rid of idchain cause it was causing weird stuff. Need to fix l8r */
 /* objtype : POINT | LINE | CIRCLE | ANGLE | POLYGON | NUMTYPE ; */
 
 /** Lexer  **/

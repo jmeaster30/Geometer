@@ -12,6 +12,7 @@ namespace Geometer.Utilities
     {
       CancellationTokenSource cancelTokenSource = null;
 
+      // return func;
       return arg =>
       {
         cancelTokenSource?.Cancel();
@@ -22,7 +23,16 @@ namespace Geometer.Utilities
           {
             if (t.IsCompletedSuccessfully)
             {
-              func(arg);
+              try
+              {
+                func(arg);
+              }
+              catch (Exception e)
+              {
+                Console.WriteLine("DEBOUNCE ERROR:::");
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+              }
             }
           }, TaskScheduler.Default);
       };
