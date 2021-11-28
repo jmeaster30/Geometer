@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Geometer.Lib.Translator.AST;
 
 namespace Geometer.Lib.Model
@@ -19,7 +18,7 @@ namespace Geometer.Lib.Model
 
   public class GeoModel
   {
-    public List<IModel> Models { get; set; } = new();
+    public List<Model> Models { get; set; } = new();
 
     public GeoModel() { }
 
@@ -50,7 +49,7 @@ namespace Geometer.Lib.Model
             updated = true;
           }
 
-          IModel created_model = CreateFinalModel(model_def);
+          Model created_model = CreateFinalModel(model_def);
           if (created_model != null)
           {
             Models.Add(created_model);
@@ -63,7 +62,7 @@ namespace Geometer.Lib.Model
       }
 
       Console.WriteLine("Current Models");
-      foreach (IModel model in Models)
+      foreach (Model model in Models)
       {
         Console.WriteLine($"{model.Type} - {string.Join('~', model.Name)}");
       }
@@ -125,13 +124,13 @@ namespace Geometer.Lib.Model
       return result;
     }
 
-    private IModel CreateFinalModel(ModelDef modelDef)
+    private Model CreateFinalModel(ModelDef modelDef)
     {
       List<PointModel> point_models = Models.PointModels().Where(x => modelDef.ObjectRef.Id.Chain.Contains(x.Name.FirstOrDefault())).ToList();
       List<string> name = modelDef.ObjectRef.Id.Chain;
       string name_sig = string.Join('~', name);
 
-      IModel result = null;
+      Model result = null;
 
       if (!Models.Any(x => string.Join('~', x.Name) == name_sig && x.MatchesASTType(modelDef.ObjectRef.Type)))
       {

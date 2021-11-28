@@ -8,7 +8,7 @@ namespace Geometer.Drawing
     public static void Draw(this GeoModel geomodel, GeometerDisplay display)
     {
       Console.WriteLine("Draw Model");
-      foreach (IModel model in geomodel.Models)
+      foreach (Model model in geomodel.Models)
       {
         switch (model.Type)
         {
